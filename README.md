@@ -117,7 +117,7 @@ SampleApp.exe ^
     -lut1d lut1d.bin ^
     -lut3d lut3d_33.bin ^
     -lut1dsize 1024 ^
-    -lut3dsize 33 ^
+    -lut3dsize 65 ^
     -o output/result
 ```
 
@@ -211,4 +211,3 @@ It is not intended for production use and may require modification for integrati
 * Microsoft Direct3D 12 Documentation
 * Direct3D 12 Agility SDK (NuGet)
 * D3D12 Video Processing API
-# D3D12VPBlitLUT
