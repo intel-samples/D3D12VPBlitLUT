@@ -407,6 +407,12 @@ int main(int argc, char* argv[])
         return -1;
     }
 
+    // Validate Lut Caps
+    if (supportData.SupportLUT.Flags == D3D12_VIDEO_PROCESS_LUT_SUPPORT_FLAG_NONE) {
+        std::wcout << L"LUT Processing not supported by hardware" << std::endl;
+        return -1;
+    }
+
     // Validate LUT sizes
     if (lut1dSize != supportData.SupportLUT.Native1DLUTSize) {
         std::wcout << std::dec << L"Error: Requested 1D LUT size " << lut1dSize
@@ -483,8 +489,8 @@ int main(int argc, char* argv[])
 
     ComPtr<ID3D12VideoProcessCommandList3 > spCommandList;
     VERIFY_SUCCEEDED(pDevice->CreateCommandList(0, D3D12_COMMAND_LIST_TYPE_VIDEO_PROCESS, spCommandAllocator.Get(), nullptr, IID_PPV_ARGS(&spCommandList)));
-    CComPtr< ID3D12VideoProcessCommandListInternal > spCommandListInternal;
-    VERIFY_SUCCEEDED(spCommandList->QueryInterface(IID_PPV_ARGS(&spCommandListInternal)));
+    CComPtr< ID3D12VideoProcessCommandList3DLUT > spCommandList3DLut;
+    VERIFY_SUCCEEDED(spCommandList->QueryInterface(IID_PPV_ARGS(&spCommandList3DLut)));
     spCommandList->Close(); // Close initially, will be reset in the loop
 
     ComPtr<ID3D12CommandQueue> spCopyQueue;
@@ -798,7 +804,7 @@ int main(int argc, char* argv[])
         spCommandList->ResourceBarrier(4, barriers);
 
         // VPBLT PROCESS
-        spCommandListInternal->ProcessFrames2(spVideoProcessor.Get(), &OutputArguments, 1, &InputArguments);
+        spCommandList3DLut->ProcessFrames2(spVideoProcessor.Get(), &OutputArguments, 1, &InputArguments);
         D3D12_RESOURCE_BARRIER outputToCopySourceBarrier = { D3D12_RESOURCE_BARRIER_TYPE_TRANSITION, D3D12_RESOURCE_BARRIER_FLAG_NONE, { pOutputResource.Get(), D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES, D3D12_RESOURCE_STATE_VIDEO_PROCESS_WRITE, D3D12_RESOURCE_STATE_COMMON} };
         spCommandList->ResourceBarrier(1, &outputToCopySourceBarrier);
         spCommandList->Close();

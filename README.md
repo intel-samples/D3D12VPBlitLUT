@@ -115,7 +115,7 @@ SampleApp.exe
 SampleApp.exe ^
     -i input_1080p_p010.bin ^
     -lut1d lut1d.bin ^
-    -lut3d lut3d_33.bin ^
+    -lut3d lut3d_65.bin ^
     -lut1dsize 1024 ^
     -lut3dsize 65 ^
     -o output/result
